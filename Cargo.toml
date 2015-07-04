@@ -1,0 +1,11 @@
+[package]
+name = "eg-amp_rust"
+version = "0.1.0"
+authors = ["stefan"]
+
+[dependencies]
+libc = "*"
+
+[lib]
+name = "amp_rust"
+crate-type = ["dylib"] # ?
