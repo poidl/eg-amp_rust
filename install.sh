@@ -1,12 +1,13 @@
 LV2DIR=~/.lv2/
+BACKUPDIR=~/programs/backup_lv2/
 BUNDLE=eg-amp_rust.lv2
 SONAME=libamp_rust.so
 DEST=$LV2DIR$BUNDLE
 if [ -d "$DEST" ]; then
-    if [ -d "$LV2DIR/$BUNDLE""_backup" ]; then
-        rm -r $LV2DIR/$BUNDLE"_backup"
+    if [ -d "$BACKUPDIR/$BUNDLE" ]; then
+        rm -r $BACKUPDIR/$BUNDLE
     fi
-    mv $DEST $LV2DIR/$BUNDLE"_backup"
+    mv $DEST $BACKUPDIR/$BUNDLE
 fi
 cp -r $BUNDLE $LV2DIR
 cp target/debug/$SONAME $DEST
