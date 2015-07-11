@@ -1,0 +1,13 @@
+This refers to commit a0340ffdcbb744c99a7a5323028daee0918c5cbf.
+The objective is to make the Rust version equivalent to the C version. Running  the C and version a0340ffdcbb74 of the Rust version of the plugin with jalv:
+
+valgrind --leak-check=yes --leak-check=full --show-leak-kinds=all jalv http://example.org/eg-amp_rust (or http://lv2plug.in/plugins/eg-amp)
+
+produces similar output. Difference is:
+Rust (<) vs C (>):
+
+<    total heap usage: 23,193 allocs, 23,184 frees, 2,836,163 bytes allocated
+---
+>    total heap usage: 23,313 allocs, 23,304 frees, 2,840,073 bytes allocated
+
+I don't know what that means. Maybe the difference results just from the different uri strings?
