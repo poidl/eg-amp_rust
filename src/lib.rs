@@ -100,37 +100,29 @@ impl LV2Descriptor {
     }
 }
 
+static S: &'static [u8] = b"http://example.org/eg-amp_rust\0";
+static mut desc: LV2Descriptor = LV2Descriptor {
+    amp_uri: 0 as *const libc::c_char, // ptr::null() isn't const fn (yet)
+    instantiate: LV2Descriptor::instantiate,
+    connect_port: LV2Descriptor::connect_port,
+    activate: LV2Descriptor::activate,
+    run: LV2Descriptor::run,
+    deactivate: LV2Descriptor::deactivate,
+    cleanup: LV2Descriptor::cleanup,
+    extension_data: LV2Descriptor::extension_data
+};
+
 #[no_mangle]
 pub extern fn lv2_descriptor(index:i32) -> *const LV2Descriptor {
     if index != 0 {
         return ptr::null();
     } else {
-
         println!("called lv2_descriptor");
-        //static ff: *const libc::c_char = (b"http://example.org/eg-amp_rust\n\0").as_ptr() as *const libc::c_char;
-        //static asa: *const libc::c_char = std::ffi::CStr::from_ptr(ff);
-
-        let s = "http://example.org/eg-amp_rust";
-        let cstr = CString::new(s).unwrap();
-        let ptr = cstr.as_ptr();
-        mem::forget(cstr);
-        let ff = "hoit";
-
-        //static gr: &'static LV2Descriptor = &LV2Descriptor{amp_uri: "hoit",
-        let gr = Box::new(LV2Descriptor{amp_uri: ptr,
-                                  instantiate: LV2Descriptor::instantiate,
-                                  connect_port: LV2Descriptor::connect_port,
-                                  activate: LV2Descriptor::activate,
-                                  run: LV2Descriptor::run,
-                                  deactivate: LV2Descriptor::deactivate,
-                                  cleanup: LV2Descriptor::cleanup,
-                                  extension_data: LV2Descriptor::extension_data
-                                  });
-
-
-        let hoit = &*gr as *const LV2Descriptor; // see https://doc.rust-lang.org/std/ptr/
-        mem::forget(gr);
-        return  hoit
-
+        // credits to ker on stackoverflow: http://stackoverflow.com/questions/31334356/static-struct-with-c-strings-for-lv2-plugin (duplicate) or http://stackoverflow.com/questions/25880043/creating-a-static-c-struct-containing-strings
+        let ptr = S.as_ptr() as *const libc::c_char;
+        unsafe {
+        desc.amp_uri = ptr;
+        return &desc as *const LV2Descriptor
+        }
     }
 }
