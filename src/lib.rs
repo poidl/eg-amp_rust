@@ -1,3 +1,25 @@
+// This is a translation of http://lv2plug.in/git/cgit.cgi/lv2.git/tree/plugins/eg-amp.lv2/amp.c
+// from C into Rust by S. Riha (2015)
+// Read the README.txt of the original code:
+// http://lv2plug.in/git/cgit.cgi/lv2.git/tree/plugins/eg-amp.lv2/README.txt
+// The copyright notice of the original C file:
+
+/*
+  Copyright 2006-2011 David Robillard <d@drobilla.net>
+  Copyright 2006 Steve Harris <steve@plugin.org.uk>
+
+  Permission to use, copy, modify, and/or distribute this software for any
+  purpose with or without fee is hereby granted, provided that the above
+  copyright notice and this permission notice appear in all copies.
+*/
+
+// Notes: 
+// 2015/07/11: I just started programming in Rust and I'm rather new to low level programming in 
+// general (memory management, etc.). I'm sure there is a lot of room for improvement here, if 
+// you have any ideas please let me know (hoitaus@gmail.com)
+// 2015/07/11: It is currently not possible to allocate a struct that contains a C string. See
+// comment in fn lv2_descriptor().
+
 extern crate libc;
 use std::ptr;
 use std::mem;
