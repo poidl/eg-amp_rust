@@ -1,7 +1,6 @@
 # eg-amp_rust
 
-This is a translation of an example plugin of the book "Programming LV2 Plugins".
-from C into Rust.
+This is a translation of an example plugin of the book "Programming LV2 Plugins" from C into Rust.
 
 The "Programming LV2 Plugins" book: http://lv2plug.in/book/
 
