@@ -54,12 +54,9 @@ impl LV2Descriptor {
     pub extern fn connect_port(handle: Lv2handle, port: PortIndex, data: *mut libc::c_void) {
         let amp: *mut Amp = handle as *mut Amp;
         match port {
-            PortIndex::AmpGain => {println!("Connecting gain");
-                unsafe{ (*amp).gain = data  as *const f32 };}, // data may be NULL pointer, so don't dereference!
-            PortIndex::AmpInput => {println!("Connecting input");
-                unsafe{ (*amp).input = data as *const f32 };},
-            PortIndex::AmpOutput => {println!("Connecting output");
-                unsafe{ (*amp).output = data as *mut f32 };},
+            PortIndex::AmpGain => unsafe{ (*amp).gain = data  as *const f32 }, // data may be NULL pointer, so don't dereference!
+            PortIndex::AmpInput => unsafe{ (*amp).input = data as *const f32 },
+            PortIndex::AmpOutput => unsafe{ (*amp).output = data as *mut f32 },
         }
     }
     pub extern fn activate(instance: Lv2handle) {}
@@ -69,22 +66,17 @@ impl LV2Descriptor {
         let input: *const f32 = unsafe{  (*amp).input };
         let output: *mut f32 = unsafe{ (*amp).output };
 
-        println!("gain: {}", gain);
-        println!("input: {}", unsafe{  *input } );
-
         let mut coef:  f32;
         match gain > -90.0 {
-            true    => {println!("setting coef"); coef =(10.0 as f32).powf(gain*0.05);},
-            false => {println!("setting coef to zero"); coef = 0.0;}
+            true    =>  coef =(10.0 as f32).powf(gain*0.05),
+            false =>  coef = 0.0
         }
-        println!("coef: {}", coef );
 
         unsafe{
             for x in 0..n_samples-1 {
                 *output.offset(x as isize) = *input.offset(x as isize) * coef;
             }
         }
-        println!("output: {}", unsafe{  *output } );
     }
 
     pub extern fn deactivate(instance: Lv2handle) {}
@@ -117,7 +109,6 @@ pub extern fn lv2_descriptor(index:i32) -> *const LV2Descriptor {
     if index != 0 {
         return ptr::null();
     } else {
-        println!("called lv2_descriptor");
         // credits to ker on stackoverflow: http://stackoverflow.com/questions/31334356/static-struct-with-c-strings-for-lv2-plugin (duplicate) or http://stackoverflow.com/questions/25880043/creating-a-static-c-struct-containing-strings
         let ptr = S.as_ptr() as *const libc::c_char;
         unsafe {
