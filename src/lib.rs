@@ -1,11 +1,6 @@
 extern crate libc;
 use std::ptr;
-use std::ffi::CString;
-use std::ffi::CStr;
 use std::mem;
-use std::boxed;
-use std::cmp::Ordering;
-use std::num;
 
 pub type Lv2handle = *mut libc::c_void;
 
@@ -43,7 +38,7 @@ struct Amp {
 }
 
 impl LV2Descriptor {
-    pub extern fn instantiate(descriptor: *const LV2Descriptor, rate: &mut f64, bundle_path: *const u8, features: *const LV2Feature)
+    pub extern fn instantiate(_descriptor: *const LV2Descriptor, _rate: &mut f64, _bundle_path: *const u8, _features: *const LV2Feature)
                                 -> Lv2handle {
                                 let ptr: *mut libc::c_void;
                                 unsafe{
@@ -59,7 +54,7 @@ impl LV2Descriptor {
             PortIndex::AmpOutput => unsafe{ (*amp).output = data as *mut f32 },
         }
     }
-    pub extern fn activate(instance: Lv2handle) {}
+    pub extern fn activate(_instance: Lv2handle) {}
     pub extern fn run(instance: Lv2handle, n_samples: u32) {
         let amp = instance as *const Amp;
         let gain = unsafe{ *((*amp).gain) };
@@ -79,7 +74,7 @@ impl LV2Descriptor {
         }
     }
 
-    pub extern fn deactivate(instance: Lv2handle) {}
+    pub extern fn deactivate(_instance: Lv2handle) {}
     pub extern fn cleanup(instance: Lv2handle) {
 
         unsafe{
@@ -87,7 +82,7 @@ impl LV2Descriptor {
             libc::free(instance  as Lv2handle)
         }
     }
-    pub extern fn extension_data(uri: *const u8)-> (*const libc::c_void) {
+    pub extern fn extension_data(_uri: *const u8)-> (*const libc::c_void) {
                             ptr::null()
     }
 }
